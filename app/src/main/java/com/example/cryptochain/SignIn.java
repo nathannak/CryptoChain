@@ -1,5 +1,6 @@
 package com.example.cryptochain;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
@@ -52,6 +53,10 @@ public class SignIn extends AppCompatActivity {
                                 {
 
                                     Toast.makeText(getApplicationContext(),"Response from server is: " + response+ "\nLOGIN SUCCESS",Toast.LENGTH_LONG).show();
+
+                                    Intent i = new Intent(SignIn.this,VideoChooserActivity.class);
+                                    //i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                    startActivity(i);
 
                                 }
                             },

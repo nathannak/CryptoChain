@@ -1,10 +1,12 @@
 package com.example.cryptochain;
 
 import android.content.Intent;
-import android.provider.SyncStateContract;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,18 +22,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
-
-import static android.provider.Telephony.Carriers.PASSWORD;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,10 +39,12 @@ public class MainActivity extends AppCompatActivity {
     Button btn;
     TextView txt_view;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         email_et = (EditText) findViewById(R.id.editText2);
         password_et = (EditText) findViewById(R.id.editText5);
@@ -91,7 +91,10 @@ public class MainActivity extends AppCompatActivity {
                         }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
+
                                 Log.e("VOLLEY", error.toString());
+                                Toast.makeText(getApplicationContext(), "Sign up failed", Toast.LENGTH_LONG).show();
+
                             }
                         }) {
                             @Override
@@ -124,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    //
 
                 }
 
@@ -132,18 +134,20 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        txt_view.setOnClickListener(new
-                                            View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                    startActivity( new Intent(MainActivity.this, SignIn.class));
-                                                }
-                                            });
+        txt_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                Intent i = new Intent(MainActivity.this,SignIn.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(i);
+
+            }
+        });
 
     }
-}
 
+}
 
 
 
