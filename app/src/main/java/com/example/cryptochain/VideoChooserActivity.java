@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -25,8 +26,9 @@ import java.util.List;
 
 public class VideoChooserActivity extends AppCompatActivity {
 
-
     Button btn;
+    TextView txtView;
+
     static List<String> hashList = new ArrayList<>();
     static InputStream iStream;
 
@@ -93,21 +95,25 @@ public class VideoChooserActivity extends AppCompatActivity {
                             }
 
 
-
-
                         }
                     }.execute();
+
 
                     //get date
                     System.out.println("LOGS: "+ getDate(data_2.getData()) );
 
-                    //TODO:post to server
+                    //getName
+                    System.out.println("LOGS: "+ getName(data_2.getData()) );
+                    txtView.setText(getName(data_2.getData()));
 
+
+                    //TODO:post Hash to server here
 
 
                     //getBytes(iStream);
                     //call this from within getBytes
-                    //SHAsum(getBytes(iStream));
+                    // SHAsum(getBytes(iStream));
+
 
                 }catch (Exception e){e.printStackTrace();};
 
@@ -139,6 +145,7 @@ public class VideoChooserActivity extends AppCompatActivity {
         setContentView(R.layout.activity_video_chooser);
 
         btn = (Button) findViewById(R.id.video_choose_button);
+        txtView = (TextView) findViewById(R.id.textView);
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,9 +159,7 @@ public class VideoChooserActivity extends AppCompatActivity {
         });
 
 
-        //TODO: send to server here
-
-
+        //TODO: send INFO to server here
 
 
     }
@@ -165,6 +170,17 @@ public class VideoChooserActivity extends AppCompatActivity {
         Cursor cursor = managedQuery(uri, projection, null, null, null);
         if(cursor!=null) {
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_TAKEN);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        }
+        else return null;
+    }
+
+    public String getName(Uri uri) {
+        String[] projection = { MediaStore.Images.Media.DISPLAY_NAME};
+        Cursor cursor = managedQuery(uri, projection, null, null, null);
+        if(cursor!=null) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME);
             cursor.moveToFirst();
             return cursor.getString(column_index);
         }
@@ -189,7 +205,6 @@ public class VideoChooserActivity extends AppCompatActivity {
                 System.gc();
 
 
-
                 byteBuffer.write(buffer, 0, len);
                 counter++;
 
@@ -208,7 +223,6 @@ public class VideoChooserActivity extends AppCompatActivity {
                 }
 
                 System.gc();
-
 
             }
 
