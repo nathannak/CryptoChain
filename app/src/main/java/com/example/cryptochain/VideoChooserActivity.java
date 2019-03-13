@@ -12,7 +12,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -26,11 +28,16 @@ import java.util.List;
 
 public class VideoChooserActivity extends AppCompatActivity {
 
-    Button btn;
-    TextView txtView;
+    Button pick_btn;
+    Button send_btn;
+    TextView retreived_name_txtview;
+    EditText given_name_editext;
 
     static List<String> hashList = new ArrayList<>();
     static InputStream iStream;
+    static String videoName ="";
+    static String creationDate="";
+    static String final_hash = "";
 
     @SuppressLint("StaticFieldLeak")
     @Override
@@ -59,10 +66,7 @@ public class VideoChooserActivity extends AppCompatActivity {
 
                 try {
 
-                    //debug here -> OOM we have to divide to chinks
-                    //Toast.makeText(this,Arrays.toString(getBytes(iStream)),Toast.LENGTH_LONG).show();
-
-                    //debug here -> OOM we have to divide to chinks
+                    //debug here -> OOM we have to divide to chunks
                     //Toast.makeText(this,SHAsum(getBytes(iStream)),Toast.LENGTH_LONG).show();
 
                     //hash from within getBytes no other way
@@ -74,6 +78,7 @@ public class VideoChooserActivity extends AppCompatActivity {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
+
                             return null;
 
                         }
@@ -83,7 +88,34 @@ public class VideoChooserActivity extends AppCompatActivity {
 
                             super.onPostExecute(aVoid);
 
+                            //log list of hashes for debugging
                             System.out.println("LOGS: "+ hashList.toString());
+
+                            //get hash of hashes
+                            String aggregated_hash = "";
+
+                            for(String str: hashList){
+
+                                aggregated_hash += str;
+
+                            }
+
+                            //Toast.makeText(VideoChooserActivity.this,aggregated_hash,Toast.LENGTH_LONG).show();
+
+                            //ToDo get hash of hashes here
+                            try {
+
+                                final_hash = (String) SHAsum(aggregated_hash.getBytes());
+
+                            } catch (NoSuchAlgorithmException e) {
+
+                                e.printStackTrace();
+
+                            }
+
+                            Toast.makeText(VideoChooserActivity.this,"Hash of concatenation of hashes: " + final_hash,Toast.LENGTH_LONG).show();
+
+                            //reset static var
                             hashList=new ArrayList<>();
 
                             try {
@@ -94,26 +126,24 @@ public class VideoChooserActivity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-
                         }
                     }.execute();
-
 
                     //get date
                     System.out.println("LOGS: "+ getDate(data_2.getData()) );
 
                     //getName
                     System.out.println("LOGS: "+ getName(data_2.getData()) );
-                    txtView.setText(getName(data_2.getData()));
+                    retreived_name_txtview.setText(getName(data_2.getData()));
 
+                    videoName = getName(data_2.getData());
+                    creationDate= getDate(data_2.getData());
 
-                    //TODO:post Hash to server here
-
+                    //we are done here the rest happens in send button
 
                     //getBytes(iStream);
                     //call this from within getBytes
-                    // SHAsum(getBytes(iStream));
-
+                    //SHAsum(getBytes(iStream));
 
                 }catch (Exception e){e.printStackTrace();};
 
@@ -144,10 +174,13 @@ public class VideoChooserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_chooser);
 
-        btn = (Button) findViewById(R.id.video_choose_button);
-        txtView = (TextView) findViewById(R.id.textView);
+        pick_btn = (Button) findViewById(R.id.video_choose_button);
+        send_btn = (Button) findViewById(R.id.send_button);
 
-        btn.setOnClickListener(new View.OnClickListener() {
+        retreived_name_txtview = (TextView) findViewById(R.id.textView);
+        given_name_editext = (EditText) findViewById(R.id.given_name_edit_text);
+
+        pick_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -160,7 +193,32 @@ public class VideoChooserActivity extends AppCompatActivity {
 
 
         //TODO: send INFO to server here
+        send_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                if(creationDate.equals("")){
+
+                     Toast.makeText(VideoChooserActivity.this,"Can't send; creation date couldn't be retrieved",Toast.LENGTH_LONG).show();
+
+                }else if(videoName.equals("")){
+
+                    Toast.makeText(VideoChooserActivity.this,"Can't send; video name couldn't be retrieved",Toast.LENGTH_LONG).show();
+
+                }else if(given_name_editext.getText().toString().equals("") || given_name_editext.getText().toString().length()<=2){
+
+                    Toast.makeText(VideoChooserActivity.this,"Can't send; you must give video a name",Toast.LENGTH_LONG).show();
+
+                }else{
+
+                    Toast.makeText(VideoChooserActivity.this,"Sending...",Toast.LENGTH_LONG).show();
+
+                    //ToDO send to server here
+
+                }
+
+            }
+        });
 
     }
 
