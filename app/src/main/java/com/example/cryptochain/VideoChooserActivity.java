@@ -47,16 +47,9 @@ public class VideoChooserActivity extends AppCompatActivity {
 
         final Intent data_2 = data;
 
-        //Toast.makeText(getApplicationContext(), "Video Retrieved", Toast.LENGTH_LONG).show();
-
-        Log.v("TAG", "" + resultCode);
-
         if (resultCode == RESULT_OK) {
 
             if (requestCode == 1) {
-
-                //this is to get path for later if needed
-                //String selectedVideoPath = getPath(data.getData());
 
                 try {
                     iStream = this.getContentResolver().openInputStream(data.getData());
@@ -66,10 +59,7 @@ public class VideoChooserActivity extends AppCompatActivity {
 
                 try {
 
-                    //debug here -> OOM we have to divide to chunks
-                    //Toast.makeText(this,SHAsum(getBytes(iStream)),Toast.LENGTH_LONG).show();
-
-                    //hash from within getBytes no other way
+                    //hash from within getBytes no other way to avoid OOM
                     new AsyncTask<Void,Void,Void>() {
 
                         protected Void doInBackground(Void ... params)  {
@@ -88,7 +78,6 @@ public class VideoChooserActivity extends AppCompatActivity {
 
                             super.onPostExecute(aVoid);
 
-                            //log list of hashes for debugging
                             System.out.println("LOGS: "+ hashList.toString());
 
                             //get hash of hashes
@@ -100,9 +89,6 @@ public class VideoChooserActivity extends AppCompatActivity {
 
                             }
 
-                            //Toast.makeText(VideoChooserActivity.this,aggregated_hash,Toast.LENGTH_LONG).show();
-
-                            //ToDo get hash of hashes here
                             try {
 
                                 final_hash = (String) SHAsum(aggregated_hash.getBytes());
@@ -141,27 +127,7 @@ public class VideoChooserActivity extends AppCompatActivity {
 
                     //we are done here the rest happens in send button
 
-                    //getBytes(iStream);
-                    //call this from within getBytes
-                    //SHAsum(getBytes(iStream));
-
                 }catch (Exception e){e.printStackTrace();};
-
-//                        //Toast.makeText(getApplicationContext(), "Video Path is: " + selectedVideoPath , Toast.LENGTH_LONG).show();
-//
-//                        // open as bytestream
-//                        // pass to messagedigest class
-//                        // read the stream
-//                        // does the math compute sha-2 hash
-//                        // meta data: hash primary key:
-//
-//                        // post request : video name, hash, creation date(? nice to have), comment(free entry)
-//
-//                        //button
-//                        //text field -> user enters a name
-//                        //Description -> user enters a description
-//
-//                        //send button should be disabled if no name, but ok with no description
 
             }
 
@@ -192,14 +158,13 @@ public class VideoChooserActivity extends AppCompatActivity {
         });
 
 
-        //TODO: send INFO to server here
         send_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if(creationDate.equals("")){
 
-                     Toast.makeText(VideoChooserActivity.this,"Can't send; creation date couldn't be retrieved",Toast.LENGTH_LONG).show();
+                    Toast.makeText(VideoChooserActivity.this,"Can't send; creation date couldn't be retrieved",Toast.LENGTH_LONG).show();
 
                 }else if(videoName.equals("")){
 
