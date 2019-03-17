@@ -43,7 +43,9 @@ public class SignIn extends AppCompatActivity {
                 if(!username_et.getText().toString().equals("") && !password_et.getText().toString().equals("") ){
 
                     //SIGN IN LOGIC
-                    String url = "http://ec2-18-219-112-9.us-east-2.compute.amazonaws.com/do_this";
+                    //String url = "http://ec2-18-219-112-9.us-east-2.compute.amazonaws.com/do_this";
+                    String url = "http://ec2-18-219-112-9.us-east-2.compute.amazonaws.com";
+
 
                     StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                             new Response.Listener<String>()
@@ -73,7 +75,6 @@ public class SignIn extends AppCompatActivity {
 
                     {
 
-
                         @Override
                         public Map<String, String> getHeaders() throws AuthFailureError {
                             HashMap<String, String> params = new HashMap<String, String>();
@@ -87,6 +88,14 @@ public class SignIn extends AppCompatActivity {
 
                     RequestQueue requestQueue = Volley.newRequestQueue(SignIn.this);
                     requestQueue.add(stringRequest);
+
+                    //ToDO delete after figuring out working signin API link
+                    //temp work around for sign in api not working
+                    Toast.makeText(getApplicationContext(),"LOGIN SUCCESS",Toast.LENGTH_LONG).show();
+                    Intent i = new Intent(SignIn.this,VideoChooserActivity.class);
+                    //i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(i);
+                    //
 
                 }
 

@@ -59,9 +59,9 @@ public class MainActivity extends AppCompatActivity {
                         JSONObject jsonBody = new JSONObject();
 
                         //sample working cred
-//                    jsonBody.put("email", "test@test123456.com");
-//                    jsonBody.put("username", "testtest123456");
-//                    jsonBody.put("password", "test123456123456");
+//                    jsonBody.put("email", "noah.andrews21@gmail.com");
+//                    jsonBody.put("username", "test123123");
+//                    jsonBody.put("password", "test123");
 
                         jsonBody.put("email", email_et.getText().toString());
                         jsonBody.put("username", username_et.getText().toString());
